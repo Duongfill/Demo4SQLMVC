@@ -1,0 +1,265 @@
+﻿
+@{
+    ViewBag.Title = "inputData";
+    Layout = "~/Areas/Admin/Views/Shared/_Layout.cshtml";
+}
+
+<div class="container-fluid" ng-app="myApp" ng-controller="myctrl">
+    <form ng-submit="addData()">
+        @Html.AntiForgeryToken()
+        <div class="form-horizontal">
+            <h4>Sản Phẩm</h4>
+            <hr />
+
+            <div class="form-group">
+                Tên Sản phẩm
+                <div class="col-md-10">
+                    <input type="text" ng-model="product.TENSP" class="form-control" />
+                </div>
+            </div>
+            @*<div class="form-group">
+                Note
+                <div class="col-md-10">
+                    <input type="text" ng-model="product.HANGSP" class="form-control" />
+                </div>
+            </div>*@
+            <div class="form-group"  >
+                Note
+                <textarea ng-model="product.HANGSP" ckeditor="minimal">
+
+                </textarea>
+                <div>{{product.HANGSP}}</div>
+            </div>
+            <div class="form-group">
+                Image
+                <div class="col-md-10" >
+                    <input type="file" ng-model="product.ANH" class="form-control" multiple="multiple" ngf-select="UploadFiles($files)"/>
+                    <!--<input type="file" ngf-select="Uploadimg($files)" class="form-control" id="Image" name="Image" multiple="multiple" />-->
+                </div>
+
+                @*<div ng-app="MyApp" ng-controller="MyController" class="col-md-10">
+                        <input type="file" multiple="multiple" ng-model="product.ANH" ngf-select="UploadFiles($files)" />
+                        <hr />
+                        Files:
+                        <ul><li ng-repeat="file in SelectedFiles">{{file.name}}</li></ul>
+                        <div id="dvProgress" class="progress" ng-show="Progress >= 0">
+                        </div>
+                    </div>*@
+            </div>
+            <div class="form-group">
+                Quantity
+                <div class="col-md-10">
+                    <input type="text" ng-model="product.SOLUONG" class="form-control" />
+                </div>
+            </div>
+            <div class="form-group">
+                Price
+                <div class="col-md-10">
+                    <input type="text" ng-model="product.GIASPB" class="form-control" />
+                </div>
+            </div>
+            <div class="form-group">
+                <div class="col-md-offset-2 col-md-10">
+                    <button class="btn btn-warning" type="submit">Add data</button>
+                </div>
+            </div>
+        </div>
+
+
+        <div>
+            @Html.ActionLink("Back to List", "viewData")
+        </div>
+    </form>
+</div>
+@section scripts{
+    @*<script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/danialfarid-angular-file-upload/12.2.13/ng-file-upload.min.js"></script>*@
+    <script type="text/javascript" src="https://cdn.ckeditor.com/4.5.7/full/ckeditor.js"></script>
+    <script type="text/javascript" src="https://cdn.ckeditor.com/4.5.7/full/adapters/jquery.js"></script>
+    <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/ng-ckeditor/0.2.1/ng-ckeditor.min.js"></script>
+    <script>
+        var myApp = angular.module('myApp', ["ngCkeditor", "ngFileUpload"])
+        //myApp.controller('myctrl', function ($scope, Upload, $timeout, $http, $httpParamSerializerJQLike) {
+    
+
+
+
+
+        //});
+        CKEDITOR.plugins.addExternal('simpleuploads', '/js/ckeditor/plugins/simpleuploads/plugin.js');
+        CKEDITOR.plugins.addExternal('imagesfromword', '/js/ckeditor/plugins/imagesfromword/plugin.js');
+
+
+
+        myApp.directive('ckeditor', function () {
+            return {
+                require: 'ngModel',
+                link: function (scope, element, attr, ngModel) {
+                    var editorOptions;
+                    if (attr.ckeditor === 'minimal') {
+                        // minimal editor
+                        editorOptions = {
+                            height: 100,
+                            toolbar: [
+                                { name: 'basic', items: ['Bold', 'Italic', 'Underline'] },
+                                { name: 'links', items: ['Link', 'Unlink'] },
+                                { name: 'tools', items: ['Maximize'] },
+                                { name: 'document', items: ['Source'] },
+                            ],
+                            //removePlugins: 'elementspath',
+                            //resize_enabled: false
+                        };
+                    }
+
+                    else {
+                        if (attr.ckeditor === 'regular') {
+                            // regular editor
+                            editorOptions = {
+                                filebrowserImageUploadUrl: $rootScope.globals.apiUrl + '/upload',
+                                removeButtons: 'About,Form,Checkbox,Radio,TextField,Textarea,Select,Button,ImageButton,HiddenField,Save,CreateDiv,Language,BidiLtr,BidiRtl,Flash,Iframe,addFile,Styles',
+                                extraPlugins: 'simpleuploads,imagesfromword'
+                            };
+                        } else {
+                            editorOptions = {
+                                height: 100,
+                                toolbar: [
+                                    { name: 'document', items: ['NewPage', 'Preview'] },
+                                    { name: 'clipboard', items: ['Cut', 'Copy', 'Paste', 'PasteText', 'PasteFromWord', '-', 'Undo', 'Redo'] },
+                                    { name: 'editing', items: ['Find', 'Replace', '-', 'SelectAll', '-', 'Scayt'] },
+                                    { name: 'insert', items: ['Image', 'Table', 'HorizontalRule', 'Smiley', 'SpecialChar', 'PageBreak', 'Iframe'] },
+
+                                    { name: 'styles', items: ['Styles', 'Format'] },
+                                    { name: 'basicstyles', items: ['Bold', 'Italic', 'Strike', '-', 'RemoveFormat'] },
+                                    { name: 'paragraph', items: ['NumberedList', 'BulletedList', '-', 'Outdent', 'Indent', '-', 'Blockquote'] },
+                                    { name: 'links', items: ['Link', 'Unlink', 'Anchor'] },
+                                    { name: 'tools', items: ['Maximize', '-', 'About'] },
+
+                                    { name: 'color', items: ['Link', 'Unlink', 'Anchor'] },
+                                    { name: 'other', items: ['Maximize', '-', 'About'] }
+                                ]
+                            };
+                        }
+                    }
+                    // enable ckeditor
+                    var ckeditor = element.ckeditor(editorOptions);
+
+                    // update ngModel on change
+                    ckeditor.editor.on('change', function () {
+                        ngModel.$setViewValue(this.getData());
+                    });
+                }
+            };
+        });
+        myApp.controller("myctrl", function ($scope) {
+            $scope.data = "Xin chao cac ban";
+            $scope.viewdata = function () {
+                alert($scope.data);
+            }
+
+        })
+
+        /**/
+        //var myApp = angular.module('myApp', []);
+        //myApp.controller('myctrl', function ($scope, $http, $httpParamSerializerJQLike) {
+        //    $scope.product = {};
+        //    $scope.addData = function () {
+        //        Token = angular.element('input[name="__RequestVerificationToken"]').attr('value');
+        //        $scope.product.__RequestVerificationToken = Token;
+        //        dataRequest = $scope.product;
+        //        console.log(dataRequest);
+        //        $http({
+        //            method: 'POST',
+        //            url: '/Admin/SANPHAMs/inputData',
+        //            data: $httpParamSerializerJQLike(dataRequest),
+        //            headers: { 'Content-Type': 'application/x-www-form-urlencoded; charset=UTF-8' }
+
+        //        }).then(function (res) {
+        //            console.log(res);
+        //            if (res.data.msg == false) {
+        //                alert("Loi them ban ghi");
+        //            }
+        //            else {
+        //                alert("Them ban ghi thanh cong");
+        //                window.location.href = "/Admin/SANPHAMs/viewData";
+        //            }
+        //        });
+        //    };
+        //});
+
+    </script>
+
+    @*<script>
+        CKEDITOR.plugins.addExternal('simpleuploads', '/js/ckeditor/plugins/simpleuploads/plugin.js');
+        CKEDITOR.plugins.addExternal('imagesfromword', '/js/ckeditor/plugins/imagesfromword/plugin.js');
+        var myApp = angular.module("myApp", ["ngCkeditor"]);
+
+        app.directive('ckeditor', function () {
+            return {
+                require: 'ngModel',
+                link: function (scope, element, attr, ngModel) {
+                    var editorOptions;
+                    if (attr.ckeditor === 'minimal') {
+                        // minimal editor
+                        editorOptions = {
+                            height: 100,
+                            toolbar: [
+                                { name: 'basic', items: ['Bold', 'Italic', 'Underline'] },
+                                { name: 'links', items: ['Link', 'Unlink'] },
+                                { name: 'tools', items: ['Maximize'] },
+                                { name: 'document', items: ['Source'] },
+                            ],
+                            //removePlugins: 'elementspath',
+                            //resize_enabled: false
+                        };
+                    }
+
+                    else {
+                        if (attr.ckeditor === 'regular') {
+                            // regular editor
+                            editorOptions = {
+                                filebrowserImageUploadUrl: $rootScope.globals.apiUrl + '/upload',
+                                removeButtons: 'About,Form,Checkbox,Radio,TextField,Textarea,Select,Button,ImageButton,HiddenField,Save,CreateDiv,Language,BidiLtr,BidiRtl,Flash,Iframe,addFile,Styles',
+                                extraPlugins: 'simpleuploads,imagesfromword'
+                            };
+                        } else {
+
+                            editorOptions = {
+                                height: 100,
+                                toolbar: [
+                                    { name: 'document', items: ['NewPage', 'Preview'] },
+                                    { name: 'clipboard', items: ['Cut', 'Copy', 'Paste', 'PasteText', 'PasteFromWord', '-', 'Undo', 'Redo'] },
+                                    { name: 'editing', items: ['Find', 'Replace', '-', 'SelectAll', '-', 'Scayt'] },
+                                    { name: 'insert', items: ['Image', 'Table', 'HorizontalRule', 'Smiley', 'SpecialChar', 'PageBreak', 'Iframe'] },
+
+                                    { name: 'styles', items: ['Styles', 'Format'] },
+                                    { name: 'basicstyles', items: ['Bold', 'Italic', 'Strike', '-', 'RemoveFormat'] },
+                                    { name: 'paragraph', items: ['NumberedList', 'BulletedList', '-', 'Outdent', 'Indent', '-', 'Blockquote'] },
+                                    { name: 'links', items: ['Link', 'Unlink', 'Anchor'] },
+                                    { name: 'tools', items: ['Maximize', '-', 'About'] },
+
+                                    { name: 'color', items: ['Link', 'Unlink', 'Anchor'] },
+                                    { name: 'other', items: ['Maximize', '-', 'About'] }
+                                ]
+
+                            };
+                        }
+
+
+                    }
+
+                    // enable ckeditor
+                    var ckeditor = element.ckeditor(editorOptions);
+
+                    // update ngModel on change
+                    ckeditor.editor.on('change', function () {
+                        ngModel.$setViewValue(this.getData());
+                    });
+                }
+            };
+
+        });
+    </script>*@
+
+
+}
+
+

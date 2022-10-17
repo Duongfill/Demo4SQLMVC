@@ -1,0 +1,70 @@
+﻿@model IEnumerable<Demo4SQLMVC.Models.NhanVien>
+
+@{
+    ViewBag.Title = "Index";
+    Layout = "~/Areas/Admin/Views/Shared/_Layout.cshtml"; int i = 1;
+}
+
+<p>
+    @Html.ActionLink("Thêm", "Create", null, new { @class = "btn btn-primary fa fa-plus" })
+</p>
+@*<div class="card-header py-3">
+        <h6 class="m-0 font-weight-bold text-primary">Danh sách nhân viên</h6>
+    </div>*@
+<table class="table table-bordered table-striped" id="dataTable" width="100%" cellspacing="0">
+    <thead>
+        <tr>
+            <th>STT</th>
+            <th>
+                Tên nhân viên
+            </th>
+            <th>
+                Giới tính
+            </th>
+            <th>
+                Số điện thoại
+            </th>
+            <th>
+                Địa chỉ
+            </th>
+            <th></th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var item in Model)
+        {
+            <tr>
+                <td>@(i++)</td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.TENNV)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.GIOITINH)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.SDT)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.DIACHI)
+                </td>
+                <td>
+                    @Html.ActionLink(" ", "Edit", new { id = item.MANV }, new { @class = "btn btn-warning fa fa-pen" })
+                    @Html.ActionLink(" ", "Details", new { id = item.MANV }, new { @class = "btn btn-info  fa fa-eye" })
+                    @Html.ActionLink(" ", "Delete", new { id = item.MANV }, new { @Onclick = "return confirm('Muốn xoá không?');", @class = "btn btn-danger fa fa-trash" })
+                </td>
+            </tr>
+        }
+    </tbody>
+</table>
+@section Scripts
+{
+    <script src="~/Assets/admin/vendor/datatables/jquery.dataTables.min.js"></script>
+    <script src="~/Assets/admin/vendor/datatables/dataTables.bootstrap4.min.js"></script>
+    <script src="~/Assets/admin/js/demo/datatables-demo.js"></script>
+}
+
+
+
+
+
+

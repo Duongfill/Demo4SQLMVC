@@ -1,0 +1,109 @@
+﻿
+@{
+    ViewBag.Title = "testck";
+    Layout = "~/Areas/Admin/Views/Shared/_Layout.cshtml";
+}
+
+
+<div class="container-fluid" ng-app="myApp" ng-controller="myctrl">
+    <h2>Thu nghiem CKeditor</h2>
+    <textarea ng-model="data" ckeditor="minimal">
+
+    </textarea>
+    <div>{{data}}</div>
+    <textarea ng-model="data2" ckeditor>
+
+    </textarea>
+    <div>{{data2}}</div>
+</div>
+
+
+
+
+@section scripts
+{
+
+    <script src="https://cdn.ckeditor.com/4.5.7/full/ckeditor.js"></script>
+    <script src="https://cdn.ckeditor.com/4.5.7/full/adapters/jquery.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/ng-ckeditor/0.2.1/ng-ckeditor.min.js"></script>
+    <script>
+        CKEDITOR.plugins.addExternal('simpleuploads', '/js/ckeditor/plugins/simpleuploads/plugin.js');
+        CKEDITOR.plugins.addExternal('imagesfromword', '/js/ckeditor/plugins/imagesfromword/plugin.js');
+        var myApp = angular.module("myApp", [/*"ngCkeditor",*/"ngFileUpload"]);
+
+        myApp.directive('ckeditor', function () {
+            return {
+                require: 'ngModel',
+                link: function (scope, element, attr, ngModel) {
+                    var editorOptions;
+                    if (attr.ckeditor === 'minimal') {
+                        // minimal editor
+                        editorOptions = {
+                            height: 100,
+                            toolbar: [
+                                { name: 'basic', items: ['Bold', 'Italic', 'Underline'] },
+                                { name: 'links', items: ['Link', 'Unlink'] },
+                                { name: 'tools', items: ['Maximize'] },
+                                { name: 'document', items: ['Source'] },
+                            ],
+                            //removePlugins: 'elementspath',
+                            //resize_enabled: false
+                        };
+                    }
+
+                    else {
+                        if (attr.ckeditor === 'regular') {
+                            // regular editor
+                            editorOptions = {
+                                filebrowserImageUploadUrl: $rootScope.globals.apiUrl + '/upload',
+                                removeButtons: 'About,Form,Checkbox,Radio,TextField,Textarea,Select,Button,ImageButton,HiddenField,Save,CreateDiv,Language,BidiLtr,BidiRtl,Flash,Iframe,addFile,Styles',
+                                extraPlugins: 'simpleuploads,imagesfromword'
+                            };
+                        } else {
+
+                            editorOptions = {
+                                height: 100,
+                                toolbar: [
+                                    { name: 'document', items: ['NewPage', 'Preview'] },
+                                    { name: 'clipboard', items: ['Cut', 'Copy', 'Paste', 'PasteText', 'PasteFromWord', '-', 'Undo', 'Redo'] },
+                                    { name: 'editing', items: ['Find', 'Replace', '-', 'SelectAll', '-', 'Scayt'] },
+                                    { name: 'insert', items: ['Image', 'Table', 'HorizontalRule', 'Smiley', 'SpecialChar', 'PageBreak', 'Iframe'] },
+
+                                    { name: 'styles', items: ['Styles', 'Format'] },
+                                    { name: 'basicstyles', items: ['Bold', 'Italic', 'Strike', '-', 'RemoveFormat'] },
+                                    { name: 'paragraph', items: ['NumberedList', 'BulletedList', '-', 'Outdent', 'Indent', '-', 'Blockquote'] },
+                                    { name: 'links', items: ['Link', 'Unlink', 'Anchor'] },
+                                    { name: 'tools', items: ['Maximize', '-', 'About'] },
+
+                                    { name: 'color', items: ['Link', 'Unlink', 'Anchor'] },
+                                    { name: 'other', items: ['Maximize', '-', 'About'] }
+                                ]
+
+                            };
+                        }
+
+
+                    }
+
+                    // enable ckeditor
+                    var ckeditor = element.ckeditor(editorOptions);
+
+                    // update ngModel on change
+                    ckeditor.editor.on('change', function () {
+                        ngModel.$setViewValue(this.getData());
+                    });
+                }
+            };
+
+        });
+        myApp.controller("myctrl", function ($scope) {
+            $scope.data = "Xin chao cac ban";
+            $scope.data2 = "Xin chao cac ban 2";
+            $scope.viewdata = function () {
+                alert($scope.data);
+                alert($scope.data2);
+            }
+        });
+    </script>
+
+}

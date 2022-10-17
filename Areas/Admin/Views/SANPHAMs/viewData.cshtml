@@ -1,0 +1,66 @@
+﻿
+@{
+    ViewBag.Title = "viewData";
+    Layout = "~/Areas/Admin/Views/Shared/_Layout.cshtml";
+}
+
+<div class="container-fluid" ng-app="myApp" ng-controller="mycontrol">
+    <h2>Danh sách sản phẩm</h2>
+    <a class="btn btn-danger" href="inputData">Create</a>
+    <table class="table table-bordered table-striped">
+        <thead>
+            <tr>
+                <th>STT</th>
+                <th>
+                    Tên Sản Phẩm
+                </th>
+                <th>
+                    Note
+                </th>
+                <th>
+                    Số lượng
+                </th>
+                <th>
+                    Ảnh
+                </th>
+                <th>
+                    Giá sản phẩm
+                </th>
+                <th>
+
+                </th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr ng-repeat="data in datas">
+                <td>{{$index+1}}</td>
+                <td>{{data.TENSP}}</td>
+                <td>{{data.HANGSP}}</td>
+                <td>{{data.SOLUONG}}</td>
+                <td><img src="/Uploadimg/{{data.ANH}}" alt="Alternate Text" style="width:100px" /></td>
+                <td>{{data.GIASPB}}</td>
+                <td><button class="btn-light"><i class="fas fa-edit"></i></button>
+                    <button class="btn-light"><i class="fas fa-trash-alt"></i></button></td>
+            </tr>
+        </tbody>
+    </table>
+</div>
+@section scripts
+{
+    <script>
+        var myApp = angular.module("myApp", []);
+        myApp.controller("mycontrol", mycontrol);
+        function mycontrol($scope, $http) {
+            //$http.get("/data.json").then(function (res) {
+            //    $scope.datas = res.data.sinhvien;
+            //});
+            $http({
+                url: "/Admin/SANPHAMs/getAllData",
+                method: "GET"
+            }).then(function (res) {
+                $scope.datas = res.data;
+            });
+        }
+    </script>
+}
+
